@@ -2,6 +2,29 @@
 #include "reg.h"
 
 /**
+ *
+ *button init
+ *
+ */
+
+void button_int(unsigned int button)
+{
+	SET_BIT(RCC_BASE + RCC_AHB1ENR_OFFSET, GPIO_EN_BIT(GPIO_PORTA));
+	//MODER
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTA)+GPIOx_MODER_OFFSET,MODERy_1_BIT(button));
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTA)+GPIOx_MODER_OFFSET,MODERy_0_BIT(button));
+	//PUPDR
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTA)+GPIOx_PUPDR_OFFSET,OSPEEDRy_1_BIT(button));
+	CLEAR_BIT(GPIO_BASE(GPIO_PORTA)+GPIOx_PUPDR_OFFSET,OSPEEDRy_0_BIT(button));
+}
+
+int button_push(unsigned int button)
+{
+	button_int(button);
+
+	return READ_BIT(GPIO_BASE(GPIO_PORTA)+GPIOx_IDR_OFFSET,IDRy_BIT(button));
+}
+/**
  * 
  * LED init
  * 
